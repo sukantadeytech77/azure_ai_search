@@ -18,7 +18,8 @@ def delete_all_files(search_endpoint, document_endpoint, api_key):
                              json=search_payload)
 
     if response.status_code != 200:
-        print("Failed to retrieve documents:", response.status_code, response.text)
+        print("Failed to retrieve documents:", response.status_code, 
+              response.text)
         exit()
 
     document_ids = [doc["id"] for doc in response.json().get("value", [])]
@@ -26,7 +27,8 @@ def delete_all_files(search_endpoint, document_endpoint, api_key):
     if document_ids:
         delete_payload = {
                 "value": [
-                    {"@search.action": "delete", "id": doc_id} for doc_id in document_ids
+                    {"@search.action": "delete", "id": doc_id} for doc_id in 
+                    document_ids
                 ]
             }
 
@@ -35,7 +37,8 @@ def delete_all_files(search_endpoint, document_endpoint, api_key):
         print("No documents to delete.")
     
 
-def upload_to_azure(documentid, content, embeddings, document_endpoint, api_key):
+def upload_to_azure(id, documentid, content, embeddings, document_endpoint, 
+                    api_key):
     headers = {
         "Content-Type": "application/json",
         "api-key": api_key
@@ -45,7 +48,8 @@ def upload_to_azure(documentid, content, embeddings, document_endpoint, api_key)
         "value": [
             {
                 "@search.action": "upload",
-                "id": documentid,
+                "id": id,
+                "documentid": documentid,
                 "content": content,
                 "large_embedding": embeddings
             }

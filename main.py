@@ -22,14 +22,6 @@ print("Starting document upload...")
 print(f"Using container: {container_name}")
 print(f"Using connection string: {connection_string}")
 
-postgres_params = {
-    "dbname": "your_db",
-    "user": "your_user",
-    "password": "your_password",
-    "host": "your_host",
-    "port": "5432"
-}
-
 # Upload document
 upload_to_blob(file_path, container_name, connection_string)
 
@@ -56,14 +48,15 @@ print("Uploading document to Azure AI Search...")
 
 delete_all_files(search_endpoint, document_endpoint, api_key)
 
-documentid = "test_document123"
+documentid = "technical_document_1"
 
 for index in range(len(chunks)):
     upload_to_azure(
-        documentid=f"{documentid}_chunk{index+1}",
+        id=f"{documentid}_chunk{index+1}",
+        documentid=documentid,
         content=chunks[index],
         embeddings=embeddings[index],
-        search_endpoint=document_endpoint,
+        document_endpoint=document_endpoint,
         api_key=api_key)
 
 print("Document uploaded to Azure AI Search.")
