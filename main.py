@@ -1,13 +1,9 @@
-
 from upload_service.blob_uploader import upload_to_blob
-#from metadata_store.postgres_handler import store_metadata
 from document_processor.chunker import chunk_text
 from document_processor.embedder import embed_chunks
 from document_search.azure_uploader import upload_to_azure
 from document_search.azure_uploader import delete_all_files
-from document_search.azure_ai_search import retrieve_documents 
 
-# from document_search.azure_ai_search import index_documents
 import os
 from dotenv import load_dotenv
 
@@ -38,12 +34,6 @@ postgres_params = {
 upload_to_blob(file_path, container_name, connection_string)
 
 print("Document uploaded.")
-
-
-# Store metadata
-# store_metadata("doc123", os.path.basename(file_path), datetime.datetime.now(), postgres_params)
-# print("Metadata stored.")
-
 
 # Process document
 with open(file_path, "r", encoding="utf-8") as f:
@@ -77,7 +67,3 @@ for index in range(len(chunks)):
         api_key=api_key)
 
 print("Document uploaded to Azure AI Search.")
-
-print("Retrieving documents from Azure AI Search...")
-retrieve_documents(search_endpoint, api_key, "Ethical and Societal Considerations")
-print("Document retrieval complete.")
