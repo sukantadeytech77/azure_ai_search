@@ -1,0 +1,6 @@
+python-dotenv
+openai
+azure-storage-blob
+psycopg2
+sentence-transformers
+requests
