@@ -1,94 +1,98 @@
+Artificial intelligence in medicine☆
+Author links open overlay panelPavel Hamet
+, Johanne Tremblay
 
-The Significance of Artificial Intelligence in Computer Science
+Show more
+
+Add to Mendeley
+
+Share
+
+Cite
+https://doi.org/10.1016/j.metabol.2017.01.011
+Get rights and content
+Abstract
+Artificial Intelligence (AI) is a general term that implies the use of a computer to model intelligent behavior with minimal human intervention. AI is generally accepted as having started with the invention of robots. The term derives from the Czech word robota, meaning biosynthetic machines used as forced labor. In this field, Leonardo Da Vinci's lasting heritage is today's burgeoning use of robotic-assisted surgery, named after him, for complex urologic and gynecologic procedures. Da Vinci's sketchbooks of robots helped set the stage for this innovation. AI, described as the science and engineering of making intelligent machines, was officially born in 1956. The term is applicable to a broad range of items in medicine such as robotics, medical diagnosis, medical statistics, and human biology—up to and including today's “omics”. AI in medicine, which is the focus of this review, has two main branches: virtual and physical. The virtual branch includes informatics approaches from deep learning information management to control of health management systems, including electronic health records, and active guidance of physicians in their treatment decisions. The physical branch is best represented by robots used to assist the elderly patient or the attending surgeon. Also embodied in this branch are targeted nanorobots, a unique new drug delivery system. The societal and ethical complexities of these applications require further reflection, proof of their medical utility, economic value, and development of interdisciplinary strategies for their wider application.
 Introduction
-Artificial Intelligence (AI) has emerged as one of the most transformative forces in computer science, reshaping how machines interact with data, humans, and the world. From its theoretical foundations to real-world applications, AI has evolved from a niche research area into a central pillar of modern computing. Its significance lies not only in its ability to automate tasks but also in its capacity to learn, adapt, and make decisions—traits traditionally associated with human intelligence.
-This essay explores the multifaceted role of AI in computer science, examining its historical development, core technologies, applications, ethical considerations, and future potential.
+Artificial intelligence (AI) is generally accepted as having started with the invention of robots. The word robot, spelled robota in Czech, was introduced into the literature by the writer Karel Capek in his 1921 play, “R.U. R” (Rossum's Universal Robots). It signified a factory where biosynthetic machines are used as forced labor. In the middle of the last century, Isaac Asimov immortalized the word “robot” in a collection of short stories of modern science-fiction. The first mention of a humanoid automaton, however, can be traced back to the third century in China when a mechanical engineer, Yan Shi, presented to the Emperor Mu of Zhou, a human shaped figure of mechanical handiwork built with leather, wood and artificial organs [1].0 In the 12th century, a Muslim golden age scholar, polymath, inventor, and mechanical engineer named al-Jazari created a humanoid robot able to strike cymbals. During the Renaissance period, Leonardo da Vinci made a detailed study of human anatomy to design his humanoid robot. His sketches drawn in 1495, were only rediscovered in the 1950s. Leonardo's robot was a knight robot that was able to stand-up, sit-down, wave arms and move head and jaw. It was operated by pulleys and cables. More important than his accomplishments in this area, da Vinci's sketchbooks were a source of inspiration for a generation of robotic researchers, some of whom worked at NASA.
+In medicine, a surgical system made by the American company, Intuitive Surgical, was named Da Vinci in recognition of his inspirational impact. It was approved by the Food and Drug Administration (FDA) in 2000, and the number of units in operation around the world is now over 5000. Da Vinci surgical systems facilitate complex surgery using a minimally invasive approach, and can be controlled by a surgeon from a console. The system is commonly used for prostatectomies and gynecologic surgical procedures. It is starting to be used for cardiac valve repair.
+The evolution of robots made a change in direction with the first robot to be recognized as revolutionary in its mechanical realistic conception being the “Flute Player”, conceived in the 18th century by the French inventor, Jacques de Vaucanson, as an innovative “automaton” playing the pipe. It had a repertoire of 12 songs. Two centuries later, William Gray Water became famous in 1948 for the fabrication of the first electronic autonomous robot, which he named Machina Speculatrix. His goal was to demonstrate how the brain functions. It revealed that connections between a small number of “brain cells” could lead to very complex behaviors. John McCarthy coined the term “artificial intelligence” (AI) in 1955, defining it as “the science and engineering of making intelligent machines”. He was very influential in the early development of AI. With his colleagues he founded the field of AI in 1956 at a Dartmouth College conference on artificial intelligence. The conference gave birth to what developed into a new interdisciplinary research area. It provided an intellectual framework for all subsequent computer research and development efforts.
+During the following years, computers started to solve many complex mathematical problems that soon became of interest to the Department of Defense of the USA. Then, after a period of slowdowns in the 80’s, a new golden era restarted with the use of logistic data mining and medical diagnosis. Instruments with increasing computational power were developed. This new capability allowed Big Blue to finally beat the world Chess champion, Gary Kasparov on May 11, 1997.
+Today, AI is considered a branch of engineering that implements novel concepts and novel solutions to resolve complex challenges. With continued progress in electronic speed, capacity, and software programming, computers might someday be as intelligent as humans. One cannot neglect the important contribution of contemporary cybernetics to the development of AI.
+Defined as a trans-disciplinary approach, cybernetics aims for control of any system using technology that explores system regulation, structure and constraints, most notably mechanical, physical, biological, and social. The origin of cybernetics is attributed to Norbert Wiener [2], who formalized the notion of feedback, with implications for engineering, systems control, computer science, biology, neuroscience, philosophy, and the organization of society. Fields that were most influenced by cybernetics are (if we exclude game theory) systems theory, sociology, psychology (especially neuropsychology and cognitive psychology), and theory of organizations.
+Today literature on AI is abundant and unbridled. AI was portrayed as a possible threat to the world economy during the 2015 economic forum held at Davos, where Stephen Hawking even expressed his fear that AI may one day eliminate humanity [3]. We will not discuss here the use of this rapidly developing field in military, security, transport or manufacturing; instead, the focus of our chapter is on medicine and health systems.
+Access through your organization
+Check access to the full text by signing in through your organization.
 
-1. Historical Context and Evolution
-AI's roots in computer science date back to the mid-20th century, when pioneers like Alan Turing posed fundamental questions about machine intelligence. The 1956 Dartmouth Conference is widely considered the birth of AI as a formal field, where researchers envisioned machines that could simulate human reasoning.
-Early AI systems were rule-based and deterministic, relying on symbolic logic and expert systems. However, limitations in computing power and data availability led to periods of stagnation known as "AI winters." The resurgence of AI in the 21st century was fueled by advances in machine learning, big data, and cloud computing, enabling systems to learn from experience rather than rely solely on predefined rules.
-
-2. Core AI Technologies in Computer Science
-AI encompasses a wide range of subfields, each contributing uniquely to computer science:
-a. Machine Learning (ML)
-ML enables computers to learn patterns from data and improve performance over time. It has revolutionized areas like predictive analytics, recommendation systems, and fraud detection.
-b. Deep Learning
-A subset of ML, deep learning uses neural networks with multiple layers to model complex relationships. It powers image recognition, natural language processing (NLP), and autonomous systems.
-c. Natural Language Processing (NLP)
-NLP allows machines to understand, interpret, and generate human language. Applications include chatbots, translation services, and sentiment analysis.
-d. Computer Vision
-This field enables machines to interpret visual information. It’s used in facial recognition, medical imaging, and autonomous vehicles.
-e. Robotics
-AI-driven robotics combines perception, decision-making, and actuation, allowing machines to perform tasks in dynamic environments.
-f. Reinforcement Learning
-This technique trains agents to make decisions by rewarding desirable actions. It’s used in game playing, resource optimization, and robotics.
-
-3. AI’s Impact on Key Areas of Computer Science
-a. Software Development
-AI tools assist developers by automating code generation, debugging, and testing. GitHub Copilot, for example, uses AI to suggest code snippets, improving productivity and reducing errors.
-b. Data Science and Analytics
-AI enhances data analysis by uncovering hidden patterns and generating insights. It enables predictive modeling, anomaly detection, and real-time analytics.
-c. Cybersecurity
-AI strengthens cybersecurity by detecting threats, analyzing network traffic, and responding to incidents. Machine learning models can identify malware and phishing attempts with high accuracy.
-d. Human-Computer Interaction (HCI)
-AI improves HCI through intelligent interfaces, voice assistants, and adaptive systems. It enables more natural and intuitive interactions between users and machines.
-e. Cloud Computing and Edge AI
-AI optimizes resource allocation in cloud environments and enables intelligent processing at the edge, reducing latency and bandwidth usage.
-
-4. Real-World Applications
-AI’s integration into computer science has led to groundbreaking applications across industries:
-
-Healthcare: AI assists in diagnostics, drug discovery, and personalized treatment plans.
-Finance: Algorithms analyze market trends, detect fraud, and automate trading.
-Education: Adaptive learning platforms tailor content to individual student needs.
-Transportation: Autonomous vehicles use AI for navigation, obstacle detection, and decision-making.
-Retail: AI powers recommendation engines, inventory management, and customer service bots.
-
-
-5. Ethical and Societal Considerations
-As AI becomes more pervasive, ethical concerns have gained prominence:
-a. Bias and Fairness
-AI systems can inherit biases from training data, leading to unfair outcomes. Ensuring fairness requires diverse datasets and transparent algorithms.
-b. Privacy
-AI’s ability to analyze personal data raises privacy concerns. Regulations like GDPR aim to protect user rights.
-c. Job Displacement
-Automation may replace certain jobs, necessitating reskilling and workforce adaptation.
-d. Accountability
-Determining responsibility for AI decisions—especially in critical domains like healthcare or law enforcement—is a complex challenge.
-e. Explainability
-Black-box models like deep neural networks lack transparency. Research in explainable AI (XAI) seeks to make decisions understandable to humans.
-
-6. AI and the Future of Computer Science
-AI is not just a tool—it’s reshaping the very foundations of computer science:
-a. New Paradigms
-AI introduces new programming paradigms focused on learning and adaptation rather than explicit instructions.
-b. Interdisciplinary Integration
-AI bridges computer science with fields like neuroscience, linguistics, and ethics, fostering interdisciplinary innovation.
-c. Quantum AI
-The convergence of AI and quantum computing promises exponential improvements in processing power and problem-solving capabilities.
-d. Autonomous Systems
-AI enables systems that operate independently, from drones to smart factories, transforming industries and infrastructure.
-e. AI-Augmented Creativity
-AI assists in creative tasks like music composition, art generation, and storytelling, expanding the boundaries of human expression.
-
-7. Challenges and Research Frontiers
-Despite its progress, AI faces several challenges:
-
-Generalization: Models often struggle to perform well outside their training data.
-Energy Efficiency: Training large models consumes significant resources.
-Robustness: AI systems must be resilient to adversarial attacks and unexpected inputs.
-Ethical Governance: Establishing global standards for responsible AI development is crucial.
-
-Ongoing research in areas like federated learning, neuromorphic computing, and causal inference aims to address these limitations.
-
+Section snippets
+Artificial Intelligence in Medicine: The Virtual Branch
+The application of AI in medicine has two main branches: virtual and physical. The virtual component is represented by Machine Learning, (also called Deep Learning) that is represented by mathematical algorithms that improve learning through experience. There are three types of machine learning algorithms: (i) unsupervised (ability to find patterns), (ii) supervised (classification and prediction algorithms based on previous examples), and (iii) reinforcement learning (use of sequences of
+Artificial Intelligence in Medicine: The Physical Branch
+The second form of application of AI in medicine includes physical objects, medical devices and increasingly sophisticated robots taking part in the delivery of care (carebots) [13]. Perhaps the most promising approach is the use of robots as helpers; for example, a robot companion for the aging population with cognitive decline or limited mobility. Japanese carebots are the most advanced forms of this technology. Robots are used in surgery as assistant-surgeons or even as solo performers [14]. 
+Use of Robots to Monitor Effectiveness of Treatment
+Robots can also be useful in the evaluation of changes in human performance in such situations as rehabilitation [16]. Another area where AI might be helpfully employed is for monitoring the guided delivery of drugs to target organs, tissues or tumors. For example, it is encouraging to learn of the recent development of nanorobots designed to overcome delivery problems that arise when difficulty of diffusion of the therapeutic agent into a site of interest is encountered. This problem occurs
 Conclusion
-Artificial Intelligence has become a cornerstone of computer science, driving innovation, efficiency, and new possibilities across disciplines. Its significance lies not only in its technical capabilities but also in its potential to reshape society, economy, and human experience. As we continue to explore and refine AI technologies, it is essential to balance progress with responsibility, ensuring that AI serves as a force for good in the digital age.
-The journey of AI in computer science is far from over. With each breakthrough, we move closer to realizing machines that not only compute but also comprehend, collaborate, and create—ushering in a future where intelligence is not confined to biology but extended through technology.
+AI for personal use is going to stay with us much as genetics will continue to provide personal services. It is therefore important to consider how AI will also serve the development of our health care systems. Takashi Kido [20] proposed MyFinder as a personalized community computing to resolve challenges of personalized genome services, acting jointly with AI and shaping the personalized and participative health care of the future. The goal of this platform is to provide personal genome
+Conflict of Interests
+None.
+Acknowledgments
+The authors would like to thank Professor Ted VanItallie for his excellent comments and suggestions and for the editorial review of their manuscript. Publication of this article was supported by the Collège International de Recherche Servier (CIRS) and Canada Research Chairs to PH. The authors are members of CIRS.
+References (20)
+K. Theofilatos et al.
+Predicting protein complexes from weighted protein–protein interaction graphs with a novel unsupervised methodology: evolutionary enhanced Markov clustering
+Artif Intell Med
+(2015)
+B.G. Silverman et al.
+A systems approach to healthcare: agent-based modeling, community mental health, and population well-being
+Artif Intell Med
+(2015)
+D.D. Luxton
+Recommendations for the ethical use and design of artificial intelligent care providers
+Artif Intell Med
+(2014)
+J.A. Larson et al.
+Application of surgical safety standards to robotic surgery: five principles of ethics for nonmaleficence
+J Am Coll Surg
+(2014)
+J. Needham et al.
+Science and civilisation in China
+N. Wiener
+Cybernetics: or control and communication in the animal and the machine
+(1948)
+World Economic Forum
+Global risks 2015
+(2015)
+T. Rapakoulia et al.
+EnsembleGASVR: a novel ensemble method for classifying missense single nucleotide polymorphisms
+Bioinformatics
+(2014)
+A. Kalton et al.
+Multi-agent-based simulation of a complex ecosystem of mental health care
+J Med Syst
+(2016)
+C. Castaneda et al.
+Clinical decision support systems for improving diagnostic accuracy and achieving precision medicine
+J Clin Bioinform
+(2015)
+There are more references available in the full text version of this article.
+Cited by (1742)
+Study on artificial intelligence: The state of the art and future prospects
+2021, Journal of Industrial Information Integration
 
-mentioning cite from section 'usable ai tools' of publication:
+Show abstract
+Influence of artificial intelligence (AI) on firm performance: the business value of AI-based transformation projects
+2020, Business Process Management Journal
 
-Newman-Griffis, D. (2023). ai thinking and the enterprise of science.. https://doi.org/10.31219/osf.io/wb83e
+Show abstract
+Artificial intelligence for sustainability: Challenges, opportunities, and a research agenda
+2020, International Journal of Information Management
 
-----------------------------------------------------------------
-Of note, only right amygdala connectivity was found to be associated with LOC in the present study. This is consistent with previous studies which reported that only the right amygdala was involved in anxiety and borderline personality disorders (Minzenberg, Fan, New, Tang, & Siever, 2007; Phan, Fitzgerald, Nathan, & Tancer, 2006). However, the lateralized effects of amygdala connectivity require further replication, considering the smaller sample size in the current studyShow citation statementOf note, only right amygdala connectivity was found to be associated with LOC in the present study. This is consistent with previous studies which reported that only the right amygdala was involved in anxiety and borderline personality disorders (Minzenberg, Fan, New, Tang, & Siever, 2007; Phan, Fitzgerald, Nathan, & Tancer, 2006). However, the lateralized effects of amygdala connectivity require further replication, considering the smaller sample size in the current study
-----------------------------------------------------------------
+Show abstract
+Artificial intelligence in drug development: present status and future prospects
+2019, Drug Discovery Today
+
+Show abstract
+Artificial intelligence to deep learning: machine intelligence approach for drug discovery
+2021, Molecular Diversity
+Precision Medicine, AI, and the Future of Personalized Health Care
+2021, Clinical and Translational Science
