@@ -1,6 +1,14 @@
 
 import requests
+
+from azure.identity import DefaultAzureCredential
+from azure.search.documents import SearchClient
 from models.document import DocumentChunk
+
+# Authenticate using RBAC
+credential = DefaultAzureCredential()
+
+index_name = "cleverdocuments"
 
 
 class AzureSearchError(Exception):
@@ -11,7 +19,6 @@ class AzureSearchError(Exception):
 def delete_all_files(
     search_endpoint: str,
     document_endpoint: str,
-    api_key: str,
     batch_size: int = 1000
 ) -> int:
     """
@@ -29,108 +36,67 @@ def delete_all_files(
     Raises:
         AzureSearchError: If there's an error communicating with Azure Search
     """
-    headers = {
-        "Content-Type": "application/json",
-        "api-key": api_key
-    }
+    
+    index_name = "cleverdocuments"
+    
+    # Create search client
+    search_client = SearchClient(endpoint=search_endpoint,
+                                 index_name=index_name,
+                                 credential=credential)
 
-    try:
-        # Fetch document IDs
-        search_payload = {
-            "search": "*",
-            "select": "id",
-            "top": batch_size
-        }
-        
-        response = requests.post(
-            search_endpoint,
-            headers=headers,
-            json=search_payload,
-            timeout=30
-        )
-        
-        if response.status_code != 200:
-            msg = f"Failed to retrieve documents: {response.status_code}"
-            msg += f" - {response.text}"
-            raise AzureSearchError(msg)
+    # Perform a search
+    results = search_client.search(search_text="*")
+    # Collect document IDs to delete
+    document_ids = [doc["id"] for doc in results]
+    # Delete documents
+    if document_ids:
+        delete_actions = [{"@search.action": "delete", "id": doc_id} 
+                          for doc_id in document_ids]
+        search_client.upload_documents(documents=delete_actions)
+        print(f"Deleted {len(document_ids)} documents from index '{index_name}'.")
+    else:
+        print("No documents found to delete.")
 
-        document_ids = [doc["id"] for doc in response.json().get("value", [])]
-        
-        if not document_ids:
-            print("No documents found to delete.")
-            return 0
-
-        # Delete documents in a batch
-        delete_payload = {
-            "value": [
-                {"@search.action": "delete", "id": doc_id}
-                for doc_id in document_ids
-            ]
-        }
-
-        delete_response = requests.post(
-            document_endpoint,
-            headers=headers,
-            json=delete_payload,
-            timeout=30
-        )
-        
-        if delete_response.status_code not in (200, 207):
-            msg = f"Failed to delete documents: {delete_response.status_code}"
-            msg += f" - {delete_response.text}"
-            raise AzureSearchError(msg)
-
-        deleted_count = len(document_ids)
-        print(f"Successfully deleted {deleted_count} documents.")
-        return deleted_count
-
-    except requests.exceptions.Timeout:
-        raise AzureSearchError(
-            "Operation timed out while communicating with Azure Search"
-        )
-    except requests.exceptions.RequestException as e:
-        raise AzureSearchError(
-            f"Error communicating with Azure Search: {str(e)}"
-        )
-    except Exception as e:
-        raise AzureSearchError(
-            f"Unexpected error: {str(e)}"
-        )
+    deleted_count = len(document_ids)
+    print(f"Successfully deleted {deleted_count} documents.")
+    return deleted_count
 
 
 def upload_to_azure(
     document: DocumentChunk,
-    document_endpoint: str,
-    api_key: str
-):
+    search_endpoint: str,
+) -> None:
     """
     Upload a document chunk to Azure Search using the DocumentChunk model.
     
     Args:
         document (DocumentChunk): The document chunk to upload
-        document_endpoint (str): Azure Search document endpoint
-        api_key (str): Azure Search API key
+        search_endpoint (str): Azure Search service endpoint
+    
+    Raises:
+        AzureSearchError: If the upload fails
     """
-    headers = {
-        "Content-Type": "application/json",
-        "api-key": api_key
-    }
-
-    data = {
-        "value": [
-            {
-                "@search.action": "upload",
-                "id": document.id,
-                "documentid": document.document_id,
-                "content": document.content,
-                "tags": document.tags,
-                "large_embedding": document.embeddings
-            }
-        ]
-    }
-
     try:
-        response = requests.post(document_endpoint, headers=headers, json=data)
-        print(f"Status Code: {response.status_code} for id: {id}")
+        # Create search client
+        search_client = SearchClient(
+            endpoint=search_endpoint,
+            index_name=index_name,
+            credential=credential
+        )
+        
+        # Convert DocumentChunk to search document format
+        search_doc = {
+            "id": document.id,
+            "documentid": document.document_id,
+            "content": document.content,
+            "tags": document.tags,
+            "large_embedding": document.embeddings
+        }
+        
+        # Upload documents directly
+        search_client.upload_documents(documents=search_doc)
+
+        print("Document uploaded to Azure AI Search index.")
     except Exception as e:
-        print(f"Error preparing upload: {e} for id: {id}")
+        raise AzureSearchError(f"Upload failed: {str(e)}")
+
