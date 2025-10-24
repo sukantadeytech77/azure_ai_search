@@ -6,10 +6,10 @@ Cognitive Search.
 """
 
 import logging
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
 from dataclasses import dataclass
-import requests
-from requests.exceptions import RequestException
+from azure.identity import DefaultAzureCredential
+from azure.search.documents import SearchClient
 
 
 @dataclass
@@ -43,148 +43,60 @@ class AzureSearchClient:
 
     def __init__(
         self,
-        endpoint: str,
-        api_key: str
+        endpoint: str
     ):
         """
         Initialize the Azure Search client.
 
         Args:
             endpoint: Azure Search service endpoint
-            api_key: API key for authentication
         """
         self.endpoint = endpoint.rstrip('/')
-        self.api_key = api_key
         
         # Set up logging
         self.logger = logging.getLogger(__name__)
         
-        if not all([endpoint, api_key]):
-            raise ValueError("Both endpoint and api_key are required")
-
-    def _get_headers(self) -> Dict[str, str]:
-        """Get the required headers for API requests."""
-        return {
-            "Content-Type": "application/json",
-            "api-key": self.api_key,
-        }
-
-    def search_documents(
+    def semantic_search(
         self,
-        query: str,
-        *,
-        filter_tags: Optional[List[str]] = None,
-        select_fields: Optional[List[str]] = None,
-        top: int = 10,
-        skip: int = 0,
-        order_by: Optional[str] = None
+        search_text: str,
+        top: int = 5
     ) -> List[SearchResult]:
         """
-        Search for documents in the Azure Search index.
-
+        Perform semantic search using Azure Cognitive Search.
+        
         Args:
-            query: Search query text
-            filter_tags: Optional list of tags to filter by
-            select_fields: Optional list of fields to return
+            search_text: The text to search for
             top: Maximum number of results to return
-            skip: Number of results to skip
-            order_by: Optional field to sort by
-
+            
         Returns:
-            List of SearchResult objects
-
+            List of SearchResult objects sorted by relevance
+            
         Raises:
             AzureSearchError: If the search operation fails
-            ValueError: If parameters are invalid
-        """
-        if not query:
-            raise ValueError("Search query cannot be empty")
-        
-        if top < 1:
-            raise ValueError("top must be greater than 0")
-        
-        if skip < 0:
-            raise ValueError("skip must be non-negative")
-
-        try:
-            # Build search payload
-            payload = {
-                "search": query,
-                "select": ",".join(
-                    select_fields or ["id", "documentid", "content", "tags"]
-                ),
-                "top": min(top, 1000),  # Azure's max limit
-                "skip": skip,
-                "count": True
-            }
-
-            # Add optional parameters
-            if filter_tags:
-                tag_filters = [
-                    f"tags/any(t: t eq '{tag}')"
-                    for tag in filter_tags
-                ]
-                payload["filter"] = " or ".join(tag_filters)
-
-            if order_by:
-                payload["orderby"] = order_by
-
-            # Make request
-            self.logger.debug(f"Searching with payload: {payload}")
-            response = requests.post(
-                self.endpoint,
-                headers=self._get_headers(),
-                json=payload,
-                timeout=30
-            )
-
-            # Handle response
-            if response.status_code != 200:
-                raise AzureSearchError(
-                    f"Search failed: {response.status_code} - {response.text}"
-                )
-
-            # Parse results
-            data = response.json()
-            total_count = data.get("@odata.count", 0)
-            results = [
-                SearchResult.from_json(doc) for doc in data.get("value", [])
-            ]
-
-            self.logger.info(
-                f"Found {total_count} results, returning {len(results)} items"
-            )
-            # Only return results with score > 0.70
-            filtered_results = [r for r in results if r.score > 0.70]
-            self.logger.info(f"Filtered to {len(filtered_results)} items with score > 0.70")
-            return filtered_results
-
-        except RequestException as e:
-            raise AzureSearchError(f"Search request failed: {str(e)}")
-        except Exception as e:
-            raise AzureSearchError(f"Unexpected error during search: {str(e)}")
-
-    def get_document_by_id(self, document_id: str) -> Optional[SearchResult]:
-        """
-        Retrieve a specific document by ID.
-
-        Args:
-            document_id: The ID of the document to retrieve
-
-        Returns:
-            SearchResult object if found, None otherwise
-
-        Raises:
-            AzureSearchError: If the retrieval operation fails
         """
         try:
-            results = self.search_documents(
-                f"documentid eq '{document_id}'",
-                top=1
+            # Azure Cognitive Search configuration
+            index_name = "cleverdocuments"
+            credential = DefaultAzureCredential()
+            
+            # Create search client
+            search_client = SearchClient(
+                endpoint=self.endpoint,
+                index_name=index_name,
+                credential=credential
             )
-            return results[0] if results else None
+
+            # Perform semantic search with size limit
+            results = list(search_client.search(
+                search_text=search_text,
+                top=top,
+                select=["id", "documentid", "content", "tags"]
+            ))
+            
+            # Convert to SearchResult objects
+            return [SearchResult.from_json(result) for result in results]
             
         except Exception as e:
-            raise AzureSearchError(
-                f"Failed to retrieve document {document_id}: {str(e)}"
-            )
+            self.logger.error("Semantic search failed: %s", str(e))
+            raise AzureSearchError(f"Search failed: {str(e)}")
+    

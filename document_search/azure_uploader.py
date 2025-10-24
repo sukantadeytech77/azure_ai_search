@@ -1,15 +1,11 @@
 
-import requests
-
 from azure.identity import DefaultAzureCredential
 from azure.search.documents import SearchClient
 from models.document import DocumentChunk
 
 # Authenticate using RBAC
 credential = DefaultAzureCredential()
-
 index_name = "cleverdocuments"
-
 
 class AzureSearchError(Exception):
     """Custom exception for Azure Search operations."""
@@ -17,9 +13,7 @@ class AzureSearchError(Exception):
 
 
 def delete_all_files(
-    search_endpoint: str,
-    document_endpoint: str,
-    batch_size: int = 1000
+    search_endpoint: str
 ) -> int:
     """
     Delete all documents from Azure Search index.

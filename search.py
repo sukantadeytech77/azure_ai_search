@@ -9,23 +9,22 @@ from document_search.azure_ai_search import AzureSearchClient
 from dotenv import load_dotenv
 
 
-def search_documents(query: str, max_results: int = 5) -> None:
+def search_documents(search_text: str, max_results: int = 5) -> None:
     """
     Search documents and display results.
     """
     load_dotenv(override=False)
     
     search_endpoint = os.getenv("AZURE_SEARCH_ENDPOINT")
-    api_key = os.getenv("AZURE_SEARCH_API_KEY")
     
-    if not search_endpoint or not api_key:
+    if not search_endpoint:
         print("Error: Missing Azure Search configuration")
         return
         
-    client = AzureSearchClient(search_endpoint, api_key)
+    client = AzureSearchClient(search_endpoint)
     try:
-        results = client.search_documents(
-            query=query,
+        results = client.semantic_search(
+            search_text=search_text,
             top=max_results
         )
         

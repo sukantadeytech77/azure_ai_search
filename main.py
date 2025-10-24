@@ -119,10 +119,9 @@ class DocumentProcessor:
 
             # Step 4: Clear existing documents
             self.logger.info("Clearing existing search index...")
-            """ delete_all_files(
-                self.config.search_endpoint,
-                self.config.api_key
-            ) """
+            delete_all_files(
+                self.config.search_endpoint
+            )
 
             # Step 5: Upload to search index
             self.logger.info("Uploading to search index...")
