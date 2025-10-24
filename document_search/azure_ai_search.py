@@ -44,8 +44,7 @@ class AzureSearchClient:
     def __init__(
         self,
         endpoint: str,
-        api_key: str,
-        api_version: str = "2023-07-01-Preview"
+        api_key: str
     ):
         """
         Initialize the Azure Search client.
@@ -53,11 +52,9 @@ class AzureSearchClient:
         Args:
             endpoint: Azure Search service endpoint
             api_key: API key for authentication
-            api_version: API version to use
         """
         self.endpoint = endpoint.rstrip('/')
         self.api_key = api_key
-        self.api_version = api_version
         
         # Set up logging
         self.logger = logging.getLogger(__name__)
@@ -70,7 +67,6 @@ class AzureSearchClient:
         return {
             "Content-Type": "application/json",
             "api-key": self.api_key,
-            "api-version": self.api_version
         }
 
     def search_documents(
@@ -136,7 +132,7 @@ class AzureSearchClient:
             # Make request
             self.logger.debug(f"Searching with payload: {payload}")
             response = requests.post(
-                f"{self.endpoint}/docs/search",
+                self.endpoint,
                 headers=self._get_headers(),
                 json=payload,
                 timeout=30

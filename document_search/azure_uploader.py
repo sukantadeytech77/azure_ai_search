@@ -120,8 +120,10 @@ def upload_to_azure(
         "value": [
             {
                 "@search.action": "upload",
-                **document.to_azure_document(),
-                # Azure specific field name for embeddings
+                "id": document.id,
+                "documentid": document.document_id,
+                "content": document.content,
+                "tags": document.tags,
                 "large_embedding": document.embeddings
             }
         ]
