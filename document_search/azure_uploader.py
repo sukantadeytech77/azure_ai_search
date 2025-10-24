@@ -7,6 +7,7 @@ from models.document import DocumentChunk
 credential = DefaultAzureCredential()
 index_name = "cleverdocuments"
 
+
 class AzureSearchError(Exception):
     """Custom exception for Azure Search operations."""
     pass
@@ -44,10 +45,15 @@ def delete_all_files(
     document_ids = [doc["id"] for doc in results]
     # Delete documents
     if document_ids:
-        delete_actions = [{"@search.action": "delete", "id": doc_id} 
-                          for doc_id in document_ids]
+        delete_actions = [
+            {"@search.action": "delete", "id": doc_id}
+            for doc_id in document_ids
+        ]
         search_client.upload_documents(documents=delete_actions)
-        print(f"Deleted {len(document_ids)} documents from index '{index_name}'.")
+        print(
+            f"Deleted {len(document_ids)} documents "
+            f"from index '{index_name}'."
+        )
     else:
         print("No documents found to delete.")
 
