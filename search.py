@@ -38,11 +38,12 @@ def search_documents(query: str, max_results: int = 5) -> None:
         
         for i, result in enumerate(results, 1):
             print(f"Result {i}:")
+            print(f"ID: {result.id}")
             print(f"Document ID: {result.document_id}")
             print(f"Score: {result.score:.2f}")
             content = (
                 result.content[:200] + "..."
-                if len(result.content) > 200
+                if len(result.content) > 100
                 else result.content
             )
             print(f"Content: {content}")

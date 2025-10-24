@@ -154,7 +154,10 @@ class AzureSearchClient:
             self.logger.info(
                 f"Found {total_count} results, returning {len(results)} items"
             )
-            return results
+            # Only return results with score > 0.70
+            filtered_results = [r for r in results if r.score > 0.70]
+            self.logger.info(f"Filtered to {len(filtered_results)} items with score > 0.70")
+            return filtered_results
 
         except RequestException as e:
             raise AzureSearchError(f"Search request failed: {str(e)}")
