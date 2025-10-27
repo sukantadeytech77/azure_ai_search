@@ -3,7 +3,7 @@ from typing import List
 
 
 @dataclass
-class DocumentChunk:
+class EmbeddingDocumentChunk:
     id: str
     document_id: str
     content: str
@@ -28,7 +28,7 @@ class DocumentChunk:
         content: str,
         tags: List[str],
         embeddings: List[float]
-    ) -> 'DocumentChunk':
+    ) -> 'EmbeddingDocumentChunk':
         """Create a document chunk with the standard ID format."""
         chunk_id = f"{document_id}_chunk{chunk_index}"
         return cls(

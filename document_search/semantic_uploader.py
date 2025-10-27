@@ -1,7 +1,7 @@
 
 from azure.identity import DefaultAzureCredential
 from azure.search.documents import SearchClient
-from models.semantic_document import DocumentChunk
+from models.semantic_document import SemanticDocumentChunk
 
 # Authenticate using RBAC
 credential = DefaultAzureCredential()
@@ -61,7 +61,7 @@ def delete_all_files(
 
 
 def upload_to_azure(
-    document: DocumentChunk,
+    document: SemanticDocumentChunk,
     search_endpoint: str,
 ) -> None:
     """
@@ -87,8 +87,7 @@ def upload_to_azure(
             "id": document.id,
             "documentid": document.document_id,
             "content": document.content,
-            "tags": document.tags,
-            "large_embedding": document.embeddings
+            "tags": document.tags
         }
         
         # Upload documents directly

@@ -1,11 +1,11 @@
 
 from azure.identity import DefaultAzureCredential
 from azure.search.documents import SearchClient
-from models.semantic_document import DocumentChunk
+from models.embedding_document import EmbeddingDocumentChunk
 
 # Authenticate using RBAC
 credential = DefaultAzureCredential()
-index_name = "semantic_documents"
+index_name = "vector_documents"
 
 
 class AzureSearchError(Exception):
@@ -61,7 +61,7 @@ def delete_all_files(
 
 
 def upload_to_azure(
-    document: DocumentChunk,
+    document: EmbeddingDocumentChunk,
     search_endpoint: str,
 ) -> None:
     """
@@ -87,8 +87,8 @@ def upload_to_azure(
             "id": document.id,
             "documentid": document.document_id,
             "content": document.content,
-            "tags": document.tags,
-            "large_embedding": document.embeddings
+            "large_embedding": document.embeddings,
+            "tags": document.tags
         }
         
         # Upload documents directly

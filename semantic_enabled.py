@@ -14,15 +14,13 @@ from upload_service.blob_uploader import upload_to_blob
 from document_processor.chunker import TextChunker
 from document_processor.embedder import Embedder
 from document_search.semantic_uploader import upload_to_azure, delete_all_files
-from models.semantic_document import DocumentChunk
+from models.semantic_document import SemanticDocumentChunk
 
 
 @dataclass
 class PipelineConfig:
     """Configuration for the document processing pipeline."""
-    document_endpoint: str
     search_endpoint: str
-    api_key: str
     container_name: str
     connection_string: str
     chunk_size: int = 1024
@@ -34,9 +32,7 @@ class PipelineConfig:
         load_dotenv(override=False)
         
         required_vars = [
-            "AZURE_DOCUMENTS_ENDPOINT",
             "AZURE_SEARCH_ENDPOINT",
-            "AZURE_SEARCH_API_KEY",
             "AZURE_BLOB_CONTAINER_NAME",
             "AZURE_BLOB_CONNECTION_STRING"
         ]
@@ -47,9 +43,7 @@ class PipelineConfig:
             raise ValueError(f"Missing environment variables: {missing_vars}")
             
         return cls(
-            document_endpoint=os.getenv("AZURE_DOCUMENTS_ENDPOINT"),
             search_endpoint=os.getenv("AZURE_SEARCH_ENDPOINT"),
-            api_key=os.getenv("AZURE_SEARCH_API_KEY"),
             container_name=os.getenv("AZURE_BLOB_CONTAINER_NAME"),
             connection_string=os.getenv("AZURE_BLOB_CONNECTION_STRING")
         )
@@ -118,34 +112,24 @@ class DocumentProcessor:
             )
             self.logger.info(f"Generated {len(chunks)} chunks")
 
-            # Step 3: Generate embeddings
-            self.logger.info("Generating embeddings...")
-            embeddings = self.embedder.embed_chunks(chunks)
-            self.logger.info("Embeddings generated")
-
-            # Step 4: Clear existing documents
+            # Step 3: Clear existing documents
             self.logger.info("Clearing existing search index...")
             delete_all_files(
-                self.config.search_endpoint,
-                self.config.document_endpoint,
-                self.config.api_key
+                self.config.search_endpoint
             )
 
-            # Step 5: Upload to search index
+            # Step 4: Upload to search index
             self.logger.info("Uploading to search index...")
-            chunk_pairs = enumerate(zip(chunks, embeddings), 1)
-            for index, (chunk, embedding) in chunk_pairs:
-                doc_chunk = DocumentChunk.create_chunk(
+            for index in range(len(chunks)):
+                doc_chunk = SemanticDocumentChunk.create_chunk(
                     document_id=document_id,
                     chunk_index=index,
-                    content=chunk,
+                    content=chunks[index],
                     tags=tags,
-                    embeddings=embedding
                 )
                 upload_to_azure(
                     document=doc_chunk,
-                    document_endpoint=self.config.document_endpoint,
-                    api_key=self.config.api_key
+                    search_endpoint=self.config.search_endpoint
                 )
             
             self.logger.info("Document processing complete")

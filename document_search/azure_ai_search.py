@@ -10,6 +10,8 @@ from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
 from azure.identity import DefaultAzureCredential
 from azure.search.documents import SearchClient
+from azure.search.documents.models import VectorizedQuery
+ 
 
 @dataclass
 class SearchResult:
@@ -29,6 +31,17 @@ class SearchResult:
             content=json_data.get('content', ''),
             score=float(json_data.get('@search.score', 0.0)),
             tags=json_data.get('tags', [])
+        )
+
+    @classmethod
+    def from_vector_results(cls, result: Any) -> 'SearchResult':
+        """Create a SearchResult instance from Vector data."""
+        return cls(
+            id=result.get("id", ""),
+            document_id=result.get("document_id", ""),
+            content=result.get("content", ""),
+            score=float(result.get('@search.score', 0.0)),
+            tags=result.get("tags", [])
         )
 
 
@@ -63,76 +76,64 @@ class AzureSearchClient:
     ) -> List[SearchResult]:
         """
         Perform semantic search using Azure Cognitive Search.
-        
         Args:
             search_text: The text to search for
             top: Maximum number of results to return
-            
         Returns:
             List of SearchResult objects sorted by relevance
-            
         Raises:
             AzureSearchError: If the search operation fails
         """
         try:
             # Azure Cognitive Search configuration
-            index_name = "cleverdocuments"
+            index_name = "vector_documents"
             credential = DefaultAzureCredential()
-            
             # Create search client
             search_client = SearchClient(
                 endpoint=self.endpoint,
                 index_name=index_name,
                 credential=credential
             )
-            # Perform vector search
-            
-            results = search_client.search(
-                search_text=None,
-                vector_queries=[{
-                    "kind": "vector",
-                    "fields": "large_embedding",
-                    "vector": embeddings,
-                    "k": top,
-                    "vectorSearchProfile": "vector-profile-1761148909736"
-                }],
-                select=["id", "content", "tags"]
+            vector_query = VectorizedQuery(
+                vector=embeddings,
+                k_nearest_neighbors=5,
+                fields="large_embedding",
+                kind="vector",
+                exhaustive=True
             )
 
-            for result in results:
-                self.logger.debug("Found document ID: %s with score: %s",
-                                  result['id'], result['@search.score'])
+            results = search_client.search(
+                search_text=None,
+                vector_queries=[vector_query],
+                select=["id", "documentid", "content", "tags"],
+            )
             # Convert to SearchResult objects
-            return [SearchResult.from_json(result) for result in results]
-            
+            return [SearchResult.from_vector_results(result)
+                    for result in results]
         except Exception as e:
             self.logger.error("Semantic search failed: %s", str(e))
             raise AzureSearchError(f"Search failed: {str(e)}")
-    
+
     def semantic_search(
         self,
         search_text: str,
-        filter_tags=Optional[List[str]],
+        filter_tags: Optional[List[str]] = None,
         top: int = 5
     ) -> List[SearchResult]:
         """
         Perform semantic search using Azure Cognitive Search.
-        
         Args:
             search_text: The text to search for
             top: Maximum number of results to return
-            
         Returns:
             List of SearchResult objects sorted by relevance
-            
         Raises:
             AzureSearchError: If the search operation fails
         """
         try:
             # Azure Cognitive Search configuration
-            index_name = "cleverdocuments"
+            index_name = "semantic_documents"
             credential = DefaultAzureCredential()
-            
             # Create search client
             search_client = SearchClient(
                 endpoint=self.endpoint,
@@ -147,13 +148,15 @@ class AzureSearchClient:
                                                  for tag in filter_tags])
 
             # Perform semantic search with size limit
+            
             results = list(search_client.search(
                 search_text=search_text,
                 top=top,
                 select=["id", "documentid", "content", "tags"],
-                filter=filter_expression
+                query_type="semantic",
+                filter=filter_expression,
+                semantic_configuration_name="default",
             ))
-            
             # Convert to SearchResult objects
             return [SearchResult.from_json(result) for result in results]
             
