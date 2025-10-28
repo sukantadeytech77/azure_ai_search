@@ -9,7 +9,11 @@ from document_search.azure_ai_search import AzureSearchClient
 from dotenv import load_dotenv
 
 
-def semantic_search_documents(search_text: str, max_results: int = 5) -> None:
+def semantic_search_documents(
+    search_text: str,
+    max_results: int = 5,
+    document_tags: list | None = None,
+) -> None:
     """
     Search documents and display results.
     """
@@ -21,15 +25,14 @@ def semantic_search_documents(search_text: str, max_results: int = 5) -> None:
         print("Error: Missing Azure Search configuration")
         return
     
-    tags = ["technical section"]
-
+    # Use provided tags (list) or default to None (no tag filter)
     client = AzureSearchClient(search_endpoint)
     try:
 
         results = client.semantic_search(
             search_text=search_text,
-            filter_tags=tags,
-            top=max_results
+            filter_tags=document_tags,
+            top=max_results,
         )
         
         if not results:
@@ -77,11 +80,23 @@ def main():
         type=int,
         default=5
     )
+    parser.add_argument(
+        "--documentTags",
+        help="Comma-separated tags to filter search results",
+        type=str,
+        default=""
+    )
 
     args = parser.parse_args()
 
+    # Parse tags into a list if provided
+    document_tags = (
+        [t.strip() for t in args.documentTags.split(",") if t.strip()]
+        if args.documentTags else None
+    )
+
     print("Semantic Search Results:")
-    semantic_search_documents(args.query, args.num_results)
+    semantic_search_documents(args.query, args.num_results, document_tags)
 
 
 if __name__ == "__main__":

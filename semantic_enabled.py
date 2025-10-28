@@ -6,6 +6,7 @@ Handles document upload, processing, and search index updates.
 import os
 import logging
 from pathlib import Path
+import argparse
 from typing import List, Optional
 from dataclasses import dataclass
 from dotenv import load_dotenv
@@ -90,8 +91,6 @@ class DocumentProcessor:
         if not document_id:
             raise ValueError("document_id is required")
             
-        tags = tags or ["technical section"]
-        
         try:
             # Step 1: Upload to blob storage
             self.logger.info("Uploading document to blob storage...")
@@ -145,11 +144,44 @@ def main():
         # Initialize configuration
         config = PipelineConfig.from_env()
         processor = DocumentProcessor(config)
-        
+        # Parse command-line arguments
+        parser = argparse.ArgumentParser(
+            description=(
+                "Process and upload a document to the semantic "
+                "search index."
+            )
+        )
+        parser.add_argument(
+            "--filePath",
+            help="Path to the document file to process",
+            type=str,
+        )
+        parser.add_argument(
+            "--documentTags",
+            help="Comma-separated tags to attach to the document",
+            type=str,
+            default=""
+        )
+
+        args = parser.parse_args()
+        file_path = Path(args.filePath)
+        if not file_path.exists():
+            raise FileNotFoundError(f"Document not found: {file_path}")
+
+        # Derive a document_id from the filename if not provided
+        document_id = file_path.stem
+
+        # Parse tags (comma-separated)
+        tags = (
+            [t.strip() for t in args.documentTags.split(",") if t.strip()]
+            if args.documentTags else None
+        )
+
         # Process document
         processor.process_document(
-            file_path=Path("data/document1.txt"),
-            document_id="document1"
+            file_path=file_path,
+            document_id=document_id,
+            tags=tags
         )
         
     except Exception as e:
